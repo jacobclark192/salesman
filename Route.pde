@@ -31,23 +31,19 @@ class Route {
 
   float eval() {
     float dist = 0;
-    PVector v;
     for (int i=0; i<path.length-1; i++) {
-      //dist += sqrt((path[i].x-path[i+1].x)*(path[i].x-path[i+1].x)+(path[i].y-path[i+1].y)*(path[i].y-path[i+1].y));
-      v = PVector.sub(path[i], path[i+1]);
-      v.z=0;
-      dist += v.mag();
+      dist += sqrt((path[i].x-path[i+1].x)*(path[i].x-path[i+1].x)+(path[i].y-path[i+1].y)*(path[i].y-path[i+1].y));
     }
-    v = PVector.sub(path[0], path[path.length-1]);
-    v.z=0;
-    return dist + v.mag();
+    dist += sqrt((path[0].x-path[path.length-1].x)*(path[0].x-path[path.length-1].x)+(path[0].y-path[path.length-1].y)*(path[0].y-path[path.length-1].y));
+    return dist;
   }
 
   void swap(int swaps) {
+    PVector temp;
     for (int k = 0; k<swaps; k++) {
       int i = floor(random(path.length));
       int j = floor(random(path.length));
-      PVector temp = path[i];
+      temp = path[i];
       path[i] = path[j];
       path[j] = temp;
     }
@@ -64,9 +60,10 @@ class Route {
     System.arraycopy(path, startingIndex, section1, 0, sectionLength);
     System.arraycopy(path, startingIndex+sectionLength, section2, 0, shiftAmount);
     if (random(1) > 0.5) {
+      PVector tempSection;
       for (int i=0; i<section1.length/2; i++)
       {
-        PVector tempSection = section1[i];
+        tempSection = section1[i];
         section1[i] = section1[section1.length-i-1];
         section1[section1.length-i-1] = tempSection;
       }
@@ -75,7 +72,7 @@ class Route {
     System.arraycopy(section2, 0, path, startingIndex, shiftAmount);
   }
 
-  boolean uncross(boolean print) {
+  boolean uncross() {
     int i, j, k;
     int offset = floor(random(path.length-1)); //create an offset so i'm not always starting at index 0
     for (k=0; k<path.length-3; k++) {
@@ -84,18 +81,7 @@ class Route {
       //use i+2 because a line will not intersect the very next line
       for (j=i+2; j<path.length-1; j++) { 
         if (doIntersect(path[i], path[i+1], path[j], path[j+1])) {
-          if(print){
-            print("Intersection at index " + i + " (" + (int)path[i].z + ", " + (int)path[i+1].z + ") and index " + j + " (" + (int)path[j].z + ", " + (int)path[j+1].z + ") \n");
-            print("Segment 1 length: " + PVector.dist(path[i], path[i+1]) + " Segment 2 length: " + PVector.dist(path[j], path[j+1]) + "\n");
-            printOrder();
-            print("Eval before uncross: " + eval() + "\n");
-          }
           reverseSubsection(i+1 ,j);
-          if(print){
-            printOrder();
-            print("Segment 1 length: " + PVector.dist(path[i], path[i+1]) + " Segment 2 length: " + PVector.dist(path[j], path[j+1]) + "\n");
-            print("Eval after uncross: " + eval() + "\n");
-          }
           return true;
         }
       }
@@ -105,9 +91,10 @@ class Route {
   
   void reverseSubsection(int i, int j){ // reverse the subsection that goes from index i to j
     int sectionLength = j-i+1;
+    PVector tempSection;
     for (int k=0; k<sectionLength/2; k++)
     {
-      PVector tempSection = path[i+k];
+      tempSection = path[i+k];
       path[i+k] = path[i+sectionLength-k-1];
       path[i+sectionLength-k-1] = tempSection;
     }
