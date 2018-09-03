@@ -1,9 +1,10 @@
 import lord_of_galaxy.timing_utils.*;
 
 //SETTINGS
-static final int DESTINATIONS = 100;
-static final int ROUTES = 100;
-static final int CIVILIZATIONS = 20;
+static final int DESTINATIONS = 50;  //number of points on the screen
+static final int ROUTES = 100;        //number of paths in a population
+static final int CIVILIZATIONS = 100; //number of populations in the simulation
+
 static final String useFile = "";
 
 //GLOBALS

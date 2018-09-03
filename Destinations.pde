@@ -22,6 +22,8 @@ void saveDestinations(PVector[] d){
   String fileName = "/destinations/" + year()+"_"+month()+"_"+day()+"_"+hour()+"_"+minute()+"_"+second()+".json";
   JSONObject data = new JSONObject();
   data.setInt("length", DESTINATIONS);
+  data.setInt("routes", ROUTES);
+  data.setInt("civs", CIVILIZATIONS);
   JSONArray values = new JSONArray();
   for (int i = 0; i < DESTINATIONS; i++) {
     JSONObject destination = new JSONObject();
@@ -32,4 +34,17 @@ void saveDestinations(PVector[] d){
   }
   data.setJSONArray("destinations", values);
   saveJSONObject(data, fileName);
+}
+
+PVector[] loadDestinations(String fileName){
+  JSONObject data = new JSONObject();
+  data = loadJSONObject("/destinations/" + fileName + ".json");
+  int len = data.getInt("length");
+  JSONArray values = data.getJSONArray("destinations");
+  PVector[] destinations = new PVector[len];
+  for (int i = 0; i < len; i++) {
+    JSONObject d = values.getJSONObject(i);
+    destinations[i] = new PVector(d.getInt("x"), d.getInt("y"), d.getInt("z"));
+  }
+  return destinations;
 }

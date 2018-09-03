@@ -55,7 +55,7 @@ class Evolution{
             routes[index].shift();
             break;
           case 2:
-            if(!routes[index].uncross(false)){ //try to uncross
+            if(!routes[index].uncross()){ //try to uncross
               routes[index].shift(); //just shift if no intersections were found
             }
             break;
@@ -66,7 +66,7 @@ class Evolution{
   
   void naturalSelection(){
     for (int i = (routes.length/2); i<routes.length; i++) {
-      routes[i] = new Route(routes[0].path, floor(random(routes.length/2))+1);
+      routes[i] = new Route(routes[0].path, floor(random(routes.length/8))+1);
     }
   }
 }
